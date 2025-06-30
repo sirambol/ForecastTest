@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Task } from './task.interface';
 
-@Injectable
+@Injectable()
 export class TaskService {
     private taskList:Task[] = [];
     private taskNumber:number = 0;
