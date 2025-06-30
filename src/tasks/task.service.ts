@@ -3,8 +3,9 @@ import { Task } from './task.interface';
 
 @Injectable()
 export class TaskService {
-    private taskList:Task[] = [];
-    private taskNumber:number = 0;
+    private taskList:Task[] = [{ id: 1, title: 'Faire le café', done: false },
+    { id: 2, title: 'Coder la todolist', done: true },];
+    private taskNumber:number = 2;
 
     getAll():Task[]{
         return this.taskList;
