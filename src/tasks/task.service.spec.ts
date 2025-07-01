@@ -25,9 +25,11 @@ describe('TodoService', () => {
   it('should change done status', () => {
     const task = service.newTask('Mark as done test');
     const updated = service.markAsDone(task.id);
-    expect(updated.done).toBe(true);
+    expect(updated).not.toBeNull();
+    expect(updated!.done).toBe(true);
     const again = service.markAsDone(task.id);
-    expect(again.done).toBe(false);
+    expect(again).not.toBeNull();
+    expect(again!.done).toBe(false);
   });
 
   it('should delete a task', () => {
@@ -36,9 +38,19 @@ describe('TodoService', () => {
     expect(service.getAll().length).toBe(0);
   });
 
-  it('should throw if todo not found', () => {
-    expect(() => service.getByID(999)).toThrow();
-    expect(() => service.markAsDone(999)).toThrow();
-    expect(() => service.delete(999)).toThrow();
+  it('should return undefined if getByID is called with unknown id', () => {
+    const result = service.getByID(999);
+    expect(result).toBeUndefined();
+  });  
+
+  it('should return null if markAsDone is called with unknown id', () => {
+    const result = service.markAsDone(999);
+    expect(result).toBeNull();
   });
+
+  it('should return false if delete is called with unknown id', () => {
+    const result = service.delete(999);
+    expect(result).toBe(false);
+  });
+
 });
