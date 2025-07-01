@@ -1,56 +1,66 @@
 import { Injectable } from '@nestjs/common';
-import { Task } from './task.interface';
+import { Task } from '../generated/prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class TaskService {
-    private taskList:Task[] = [];
-    private taskNumber:number = 0;
+    constructor(private readonly prisma: PrismaService) {}
 
-    getAll():Task[]{
-        return this.taskList;
+    async getAll(): Promise<Task[]> {
+        return this.prisma.task.findMany();
     }
 
-    getByID(id:number): Task | undefined {
-        return this.taskList.find(t => t.id === id);
-}
+    async getByID(id: number): Promise<Task | null> {
+        return this.prisma.task.findUnique({
+            where: { id },
+        });
+    }
+
+    async newTask(title: string, urgency?: number): Promise<Task> {
+        return this.prisma.task.create({
+            data: {
+            title,
+            urgency,
+            done: false,
+            },
+        });
+    }
 
 
 
-    markAsDone(id:number): Task | null {
-        const task = this.getByID(id);
-        if (!task) return null;
-        task.done = !task.done;
-        return task;
-}
+    async markAsDone(id: number): Promise<Task | null> {
+        const task = await this.getByID(id);
+        if (!task) {
+            return null;
+        }
+        return this.prisma.task.update({
+            where: { id },
+            data: { done: !task.done },
+        });
+    }
 
 
-    delete(id:number): boolean{
-        const index = this.taskList.findIndex(t => t.id === id);
-        if (index === -1){
+    async delete(id: number): Promise<boolean> {
+        try {
+            await this.prisma.task.delete({
+                where: { id },
+            });
+            return true; 
+        } catch (error) {
             return false;
         }
-        this.taskList.splice(index,1);
-        return true;
+}
+
+
+    async update(id: number, partialTask: Partial<Task>): Promise<Task | null> {
+        try {
+            const updatedTask = await this.prisma.task.update({
+                where: { id },
+                data: partialTask,
+            });
+            return updatedTask;
+        } catch (error) {
+            return null;
+        }
     }
-
-
-    newTask(title:string,urgency?:number): Task {
-        const newTask: Task = {
-            id: this.taskNumber++,
-            title,
-            done: false,
-            urgency
-        };
-        this.taskList.push(newTask);
-        return newTask;
-
-    }
-
-    update(id: number, partialTask: Partial<Task>): Task | null {
-        const task = this.getByID(id);
-        if (!task) return null;
-        Object.assign(task, partialTask);
-        return task;
-    }
-
 }
