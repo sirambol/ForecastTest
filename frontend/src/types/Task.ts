@@ -4,3 +4,8 @@ export interface Task {
   done: boolean;
   urgency: number;
 }
+
+export type TaskInput = {
+  title: string;
+  urgency: number;
+};
