@@ -115,6 +115,6 @@
     "jsx": "react-jsx",
     "rootDir": "./src"
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "test/task.e2e.spec.ts"],
   "exclude": ["**/*.spec.ts", "**/*.test.ts"]
 }

@@ -24,8 +24,9 @@ export class TaskController {
     return this.taskService.newTask(body.title, body.urgency);
   }
 
-  @Post(':id/done')
+  @Patch(':id/done')
   async markTaskAsDone(@Param('id', ParseIntPipe) id: number): Promise<Task> {
+    console.log('Test for ID', id);
     const updated = await this.taskService.markAsDone(id);
     if (!updated) {
       throw new NotFoundException(`No task found with id ${id}`);
