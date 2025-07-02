@@ -114,4 +114,20 @@ describe('TaskService (unit tests)', () => {
     const result = await service.update(1, { title: 'Fail' });
     expect(result).toBeNull();
   });
+
+  it('devrait retourner 1 pour une tâche urgente', () => {
+      const result = service.classifyUrgency('Réparer bug urgent production');
+      expect(result).toBe(1);
+    });
+
+    it('devrait retourner 4 pour une tâche non urgente', () => {
+      const result = service.classifyUrgency('Lire la documentation');
+      expect(result).toBe(4);
+    });
+
+    it('devrait retourner un nombre entre 1 et 5', () => {
+      const result = service.classifyUrgency('Écrire un rapport');
+      expect(result).toBeGreaterThanOrEqual(1);
+      expect(result).toBeLessThanOrEqual(5);
+    });
 });

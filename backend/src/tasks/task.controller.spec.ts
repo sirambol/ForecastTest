@@ -16,6 +16,7 @@ describe('TaskController', () => {
       markAsDone: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),
+      classifyUrgency: jest.fn().mockReturnValue(3),
     } as unknown as jest.Mocked<TaskService>;
 
     const module: TestingModule = await Test.createTestingModule({
@@ -97,5 +98,11 @@ describe('TaskController', () => {
   it('should throw NotFoundException if delete fails', async () => {
     service.delete.mockResolvedValue(false);
     await expect(controller.delete(42)).rejects.toThrow(NotFoundException);
+  });
+
+  it('devrait retourner un objet avec une urgence', () => {
+    const result = controller.classifyUrgency('Faire une démo');
+    expect(result).toEqual({ urgency: 3 });
+    expect(service.classifyUrgency).toHaveBeenCalledWith('Faire une démo');
   });
 });

@@ -36,7 +36,7 @@ export class TaskController {
 
   @Post('classify')
     classifyUrgency(@Body('title') title: string) {
-      return this.taskService.classifyUrgency(title);
+      return { urgency :  this.taskService.classifyUrgency(title)};
     }
 
   @Patch(':id')
