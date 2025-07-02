@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { TextField, Button, Box } from '@mui/material';
+import { classifyUrgency } from '../utils/classifyUrgency';
+import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined';
 
 interface Props {
   onAdd: (title: string, urgency: number) => void;
@@ -17,6 +19,11 @@ export default function AddTaskForm({ onAdd }: Props) {
     setUrgency(1);
   };
 
+  const handleClassifyUrgency = () => {
+    const estimatedUrgency = classifyUrgency(title);
+    setUrgency(estimatedUrgency);
+  };  
+
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ mb: 2 }}>
       <TextField
@@ -33,6 +40,17 @@ export default function AddTaskForm({ onAdd }: Props) {
         onChange={(e) => setUrgency(Number(e.target.value))}
         sx={{ mr: 2, width: 100 }}
       />
+
+      <Button
+        variant="outlined"
+        onClick={handleClassifyUrgency}
+        sx={{ mr: 2 }}
+        disabled={!title.trim()}
+        startIcon={<LightbulbOutlinedIcon />}
+      >
+        Classer
+      </Button>
+
       <Button type="submit" variant="contained">
         Ajouter
       </Button>
