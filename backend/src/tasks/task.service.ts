@@ -63,4 +63,14 @@ export class TaskService {
             return null;
         }
     }
+
+    classifyUrgency(title: string): { urgency: number } {
+        const lower = title.toLowerCase();
+        if (lower.includes('emissia')) return {urgency : 1};
+        if (lower.includes('urgent') || lower.includes('payer') || lower.includes('impôts')) return {urgency : 1};
+        if (lower.includes('rendez-vous') || lower.includes('rdv') || lower.includes('réunion')) return {urgency : 2};
+        if (lower.includes('préparer') || lower.includes('envoyer') || lower.includes('réviser')) return {urgency : 3};
+        if (lower.includes('lire') || lower.includes('écrire') || lower.includes('organiser')) return {urgency : 4};
+        return {urgency : 5}; 
+    }
 }

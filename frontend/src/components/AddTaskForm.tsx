@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { TextField, Button, Box } from '@mui/material';
-import { classifyUrgency } from '../utils/classifyUrgency';
+import { classifyUrgency } from '../api/tasks';
 import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined';
 
 interface Props {
@@ -19,9 +19,14 @@ export default function AddTaskForm({ onAdd }: Props) {
     setUrgency(1);
   };
 
-  const handleClassifyUrgency = () => {
-    const estimatedUrgency = classifyUrgency(title);
-    setUrgency(estimatedUrgency);
+  const handleClassifyUrgency = async () => {
+    try {
+      const response = await classifyUrgency(title);
+      setUrgency(response.data.urgency);
+    } catch (error) {
+      console.error("Erreur IA:", error);
+    }
+    
   };  
 
   return (

@@ -11,3 +11,6 @@ export const fetchTasks = () => api.get<Task[]>('/tasks');
 export const createTask = (data: TaskInput) => api.post<Task>('/tasks', data);
 export const toggleTaskDone = (id: number) => api.patch<Task>(`/tasks/${id}/done`);
 export const deleteTask = (id: number) => api.delete(`/tasks/${id}`);
+export const classifyUrgency = (title: string) => {
+  return api.post<Task>('/tasks/classify', { title });
+}
