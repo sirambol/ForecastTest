@@ -1,4 +1,4 @@
-import { Checkbox, IconButton, ListItem, ListItemText } from '@mui/material';
+import { Checkbox, IconButton, ListItem, ListItemText, Chip } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Task } from '../types/Task';
 
@@ -9,6 +9,12 @@ interface Props {
 }
 
 export default function TaskItem({ task, onToggle, onDelete }: Props) {
+  const getUrgencyColor = (urgency: number) => {
+    if (urgency === 1) return 'error';       // rouge
+    if (urgency <= 3) return 'warning';      // orange
+    return 'success';                        // vert
+  };
+  
   return (
     <ListItem
       secondaryAction={
@@ -21,7 +27,15 @@ export default function TaskItem({ task, onToggle, onDelete }: Props) {
       <ListItemText
         primary={task.title}
         secondary={`Urgence : ${task.urgency}`}
-        sx={{ textDecoration: task.done ? 'line-through' : 'none' }}
+        sx={{ opacity: task.done ? 0.6 : 1 }}
+      />
+
+      <Chip
+        label={`Urgence: ${task.urgency}`}
+        color={getUrgencyColor(task.urgency)}
+        variant="outlined"
+        size="small"
+        sx={{ ml: 2 }}
       />
     </ListItem>
   );

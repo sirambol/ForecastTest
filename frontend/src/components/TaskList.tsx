@@ -9,9 +9,16 @@ interface Props {
 }
 
 export default function TaskList({ tasks, onToggle, onDelete }: Props) {
+  const sortedTasks = tasks.slice().sort((a, b) => {
+    if (a.done !== b.done) {
+        return Number(a.done) - Number(b.done);
+      }
+    return a.urgency - b.urgency;
+    });
+
   return (
     <List>
-      {tasks.map((task) => (
+      {sortedTasks.map((task) => (
         <TaskItem
           key={task.id}
           task={task}

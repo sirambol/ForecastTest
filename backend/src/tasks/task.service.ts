@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Task } from '../generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { execFile } from 'child_process';
+import { promisify } from 'util';
+
+const execFileAsync = promisify(execFile);
 
 @Injectable()
 export class TaskService {
@@ -64,13 +68,16 @@ export class TaskService {
         }
     }
 
-    classifyUrgency(title: string): number {
-        const lower = title.toLowerCase();
-        if (lower.includes('emissia')) return 1;
-        if (lower.includes('urgent') || lower.includes('payer') || lower.includes('impôts')) return 1;
-        if (lower.includes('rendez-vous') || lower.includes('rdv') || lower.includes('réunion')) return 2;
-        if (lower.includes('préparer') || lower.includes('envoyer') || lower.includes('réviser')) return 3;
-        if (lower.includes('lire') || lower.includes('écrire') || lower.includes('organiser')) return 4;
-        return 5; 
+    async classifyUrgencyAI(text: string): Promise<number> {
+    try {
+      const { stdout } = await execFileAsync('python3', ['light_classifier.py', text]);
+      return parseInt(stdout.trim(), 10);
+    } catch (error) {
+      console.error('Erreur lors de la classification IA:', error);
+      return 3; 
+    }
+  }
+    async deleteAll(): Promise<void> {
+        await this.prisma.task.deleteMany();
     }
 }

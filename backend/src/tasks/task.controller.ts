@@ -1,11 +1,14 @@
 import { Controller, Get, Post, Param, Body, Patch, Delete, NotFoundException, ParseIntPipe } from "@nestjs/common";
 import { TaskService } from "./task.service";
 import { Task } from '../generated/prisma/client';
+import { AiService } from "./ai.service";
 
 
 @Controller('tasks')
 export class TaskController {
-  constructor(private readonly taskService: TaskService) {}
+  constructor(private readonly taskService: TaskService,
+    private readonly aiService: AiService
+  ) {}
 
   @Get()
   async getAllTasks(): Promise<Task[]> {
@@ -33,11 +36,16 @@ export class TaskController {
     }
     return updated;
   }
+  @Delete()
+  deleteAllTasks() {
+    return this.taskService.deleteAll();
+  }
 
-  @Post('classify')
-    classifyUrgency(@Body('title') title: string) {
-      return { urgency :  this.taskService.classifyUrgency(title)};
-    }
+  @Post('classifyAI')
+    async classifyUrgencyAI(@Body('title') title: string) {
+      const urgency = await this.taskService.classifyUrgencyAI(title);
+      return { urgency }; 
+  }
 
   @Patch(':id')
   async updateTask(
@@ -56,4 +64,5 @@ export class TaskController {
       throw new NotFoundException(`Task ${id} not found`);
     }
   }
+
 }

@@ -2,7 +2,8 @@ node_modules
 dist
 build
 *.log
-
+.venv
+venv
 
 /src/generated/prisma
 .env

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { TextField, Button, Box } from '@mui/material';
-import { classifyUrgency } from '../api/tasks';
+import { classifyUrgencyAI } from '../api/tasks';
 import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined';
 
 interface Props {
@@ -19,15 +19,16 @@ export default function AddTaskForm({ onAdd }: Props) {
     setUrgency(1);
   };
 
-  const handleClassifyUrgency = async () => {
+  const handleClassifyUrgencyAI = async () => {
     try {
-      const response = await classifyUrgency(title);
-      setUrgency(response.data.urgency);
+      const response = await classifyUrgencyAI(title);
+      const estimatedUrgency = response.data.urgency;
+      setUrgency(estimatedUrgency);
     } catch (error) {
-      console.error("Erreur IA:", error);
+      console.error('Erreur IA:', error);
     }
-    
-  };  
+  };
+
 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ mb: 2 }}>
@@ -48,12 +49,12 @@ export default function AddTaskForm({ onAdd }: Props) {
 
       <Button
         variant="outlined"
-        onClick={handleClassifyUrgency}
+        onClick={handleClassifyUrgencyAI}
         sx={{ mr: 2 }}
         disabled={!title.trim()}
         startIcon={<LightbulbOutlinedIcon />}
       >
-        Classer
+        Classer IA
       </Button>
 
       <Button type="submit" variant="contained">
