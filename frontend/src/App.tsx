@@ -55,7 +55,7 @@ function App() {
     if (window.confirm('Supprimer uniquement les tâches terminées ?')) {
       try {
         const doneTaskIds = tasks.filter((task) => task.done).map((task) => task.id);
-        await Promise.all(doneTaskIds.map(deleteTask)); // appel en parallèle
+        await Promise.all(doneTaskIds.map(deleteTask));
         setTasks((prev) => prev.filter((task) => !task.done));
       } catch (error) {
         console.error('Erreur lors de la suppression des tâches terminées :', error);
